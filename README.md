@@ -14,9 +14,18 @@ Machine and Deep Learning models for speech dereverberation
 - LSTM based model 
 - FD-NDLP (WPE + frequency domain). 
   Implementation taken from https://github.com/helianvine/fdndlp
-- U-net for speech dereverberation [5]
-- GAN training with U-net generator [5]
+- U-net for speech dereverberation [6]. U-net architecture is based on image segmentation, available: https://github.com/milesial/Pytorch-UNet
+- GAN training with U-net generator [6]
 
+
+## Metrics
+- Perceptual Evaluation of Speech Quality (PESQ)
+- Cepstral Distorsion (CD)
+- Log Likelihood Ratio (LLR)
+- Frequency-Weighted Segmental Signal to Noise Ratio (fwSNRseg)
+- Speech to Reverberation Modulation Energy Ratio (SRMR)
+
+Python implementation is taken from: https://github.com/schmiph2/pysepm
 
 ## References
 
@@ -28,4 +37,6 @@ Machine and Deep Learning models for speech dereverberation
 
 [4] I. Szöke, M. Skácel, L. Mošner, J. Paliesek and J. Černocký, ''Building and evaluation of a real room impulse response dataset'', in IEEE Journal of Selected Topics in Signal Processing, vol. 13, no. 4, pp. 863-876, Aug. 2019, doi: 10.1109/JSTSP.2019.2917582.
 
-[5] Ori Ernst, Shlomo E. Chazan, Sharon Gannot and Jacob Goldberger, "Speech Dereverberation Using Fully Convolutional Networks". Faculty of Engineering, Bar-Ilan University, 3 Apr, 2019.
+[5] T. Nakatani, T. Yoshioka, K. Kinoshita, M. Miyoshi and B. Juang, "Speech Dereverberation Based on Variance-Normalized Delayed Linear Prediction," in IEEE Transactions on Audio, Speech, and Language Processing, vol. 18, no. 7, pp. 1717-1731, Sept. 2010, doi: 10.1109/TASL.2010.2052251.
+
+[6] Ori Ernst, Shlomo E. Chazan, Sharon Gannot and Jacob Goldberger, "Speech Dereverberation Using Fully Convolutional Networks". Faculty of Engineering, Bar-Ilan University, 3 Apr, 2019.
