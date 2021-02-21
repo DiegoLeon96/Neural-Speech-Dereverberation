@@ -17,6 +17,10 @@ Machine and Deep Learning models for speech dereverberation
 - U-net for speech dereverberation [6]. U-net architecture is based on image segmentation, available: https://github.com/milesial/Pytorch-UNet
 - GAN training with U-net generator [6]
 
+Speech Enhancement Example with U-net generator:
+
+<img src="example.png" width="900" height="300" />
+
 
 ## Metrics
 - Perceptual Evaluation of Speech Quality (PESQ)
