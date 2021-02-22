@@ -19,7 +19,7 @@ Machine and Deep Learning models for speech dereverberation
 
 Speech Enhancement Example with U-net generator:
 
-<img src="example.png" width="900" height="300" />
+<img src="example.png" width="900" height="200" />
 
 
 ## Metrics
