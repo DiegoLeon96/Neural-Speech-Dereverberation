@@ -1,1 +1,2 @@
-utils/** linguist-documentation=false
+utils.py linguist-vendored=false
+reverb_dataset.py linguist-vendored=false
