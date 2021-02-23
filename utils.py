@@ -10,11 +10,6 @@ import librosa.display as display
 import librosa.feature
 import soundfile as sf
 from scipy.signal import resample
-import os
-import sys
-import torch
-import cv2
-import random
 import math
 
 ##################################

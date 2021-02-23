@@ -1,4 +1,5 @@
 from torch.utils.data import Dataset
+import torch
 
 class ReverbDataset(Dataset):
     """
