@@ -1,2 +1,2 @@
-* linguist-vendored
-src/* linguist-vendored=false
+*.py linguist-detectable=true
+*.ipynb linguist-detectable=true
