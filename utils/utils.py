@@ -1,7 +1,7 @@
 #!pip install soundfile
 #!pip install librosa==0.8.0
 #!pip install scipy==1.5.2
-# use 3 lines above in console or Google Colaboratory
+# use 3 lines above in console or Google Colaboratory (colab)
 
 import numpy as np
 import matplotlib.pyplot as plt
