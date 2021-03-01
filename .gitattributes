@@ -1,1 +1,3 @@
-*.py linguist-vendored=false
+# remove notebooks and only use .py from GitHub language stats
+* linguist-vendored
+*.py linguist-vendored=false 
