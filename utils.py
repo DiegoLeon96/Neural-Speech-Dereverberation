@@ -11,6 +11,7 @@ import librosa.feature
 import soundfile as sf
 from scipy.signal import resample
 import math
+import torch
 
 ##################################
 # audio generation utils
@@ -87,6 +88,75 @@ def linear_scaler(spec):
   n = (spec_max + spec_min)/(spec_min-spec_max)
 
   return m*spec + n, (m, n)
+
+def split_specgram(example, clean_example, frames = 11):
+  """
+  Split specgram in groups of frames, the purpose is prepare data for the LSTM model input
+
+  example: reverberant spectrogram
+  clean_example: clean or target spectrogram
+
+  return data input to the LSTM model and targets
+  """
+  clean_spec = clean_example[0, :, :]
+  rev_spec = example[0, :, :]
+
+  n, m = clean_spec.shape
+
+  targets = torch.zeros((m-frames+1, n))
+  data = torch.zeros((m-frames+1, n*frames))
+  
+  idx_target = frames//2
+  for i in range(m-frames+1):
+    try:
+      targets[i, :] = clean_spec[:, idx_target]
+      data[i, :] = torch.reshape(rev_spec[:, i:i+frames], (1, -1))[0, :]
+      idx_target += 1
+    except (IndexError):
+      pass
+  return data, targets
+
+def split_realdata(example, frames = 11):
+
+  """
+  Split 1 specgram in groups of frames, the purpose is prepare data for the LSTM and MLP model input
+
+  example: reverberant ''real'' (not simulated) spectrogram
+
+  return data input to the LSTM or MLP model 
+  """
+  
+  rev_spec = example[0, :, :]
+  n, m = rev_spec.shape
+  data = torch.zeros((m-frames+1, n*frames))
+  for i in range(m-frames+1):
+    data[i, :] = torch.reshape(rev_spec[:, i:i+frames], (1, -1))[0, :]
+  return data
+
+def prepare_data(X, y, display = False):
+  """
+  Use split_specgram to split all specgrams
+  X: tensor containing reverberant spectrograms
+  y: tensor containing target spectrograms
+  """
+
+  data0, target0 = split_specgram(X[0, :, :, :], y[0, :, :, :])
+
+  total_data = data0.cuda()
+  targets = target0.cuda()
+  
+  for i in range(1, X.shape[0]):
+    
+    if display: 
+      print("Specgram n°" + str(i)) 
+      
+    data_i, target_i = split_specgram(X[i, :, :, :], y[i, :, :, :])
+    
+    total_data = torch.cat((total_data, data_i.cuda()), 0)
+    targets = torch.cat((targets, target_i.cuda()), 0)
+
+  return  total_data, targets
+
 
 #################################
 # reverberation utils
