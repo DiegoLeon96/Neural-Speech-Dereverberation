@@ -1,0 +1,8 @@
+# use it for code running locally (in colab use !pip install)
+soundfile
+librosa==0.8.0
+scipy==1.5.2
+numpy 
+matplotlib
+torch # there may be problems in windows
+opencv-python
