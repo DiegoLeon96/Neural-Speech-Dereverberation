@@ -25,14 +25,8 @@ def extract_audio(filename):
     audio, rate = sf.read(filename, always_2d=True)
     audio = np.reshape(audio, (1, -1))
     audio = audio[0]
-
-    time = []
-    t = 0
-    for i in range(len(audio)):
-        time.append(t)
-        t += 1 / rate
+    time = np.linspace(0, len(audio)/rate, len(audio), endpoint=False)
     return audio, time, rate
-
 
 def generate_spec(audio_sequence, rate, n_fft=2048, hop_length=512):
     """
@@ -235,10 +229,7 @@ def plot_time_wave(audio, rate=16000):
     rate: sampling rate
 
     """
-    time = [0]
-    for i in range(1, len(audio)):
-        time.append(time[i - 1] + 1 / rate)
-
+    time = np.linspace(0, len(audio)/rate, len(audio), endpoint=False)
     plt.figure()
     plt.plot(time, audio)
     plt.xlabel("Time (secs)")
