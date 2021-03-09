@@ -7,6 +7,9 @@ Machine and Deep Learning models for speech dereverberation
   and https://www.commsp.ee.ic.ac.uk/~sap/resources/mardy-multichannel-acoustic-reverberation-database-at-york-database/
 - BUT Speech@FIT Reverb Database for retransmitted data [4]. Available: https://speech.fit.vutbr.cz/software/but-speech-fit-reverb-database
 
+Data generated can be downloaded here: https://drive.google.com/drive/folders/1gYLP4G40HJxzzQrA_Gf2bnc18LUoB-4k?usp=sharing. It's only
+simulated data, for retransmitted data follow BUT Speech@FIT instructions
+
 
 ## Models
 
@@ -16,6 +19,8 @@ Machine and Deep Learning models for speech dereverberation
   Implementation taken from https://github.com/helianvine/fdndlp
 - U-net for speech dereverberation [6]. U-net architecture is based on image segmentation, available: https://github.com/milesial/Pytorch-UNet
 - GAN training with U-net generator [6]
+
+Download neural network weights here : https://drive.google.com/drive/folders/1wAls6GGppERIFUDEG12gk7zxNBU_iuff?usp=sharing 
 
 Speech Enhancement Example with U-net generator:
 
