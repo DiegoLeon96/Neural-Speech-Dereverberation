@@ -63,93 +63,138 @@ def normalize(spec, eps=1e-6):
     return spec_norm, (mean, std)
 
 def minmax_scaler(spec):
-  """
-  min max scaler over spectrogram
-  """
-  spec_max = np.max(spec)
-  spec_min = np.min(spec)
+    """
+    min max scaler over spectrogram
+    """
+    spec_max = np.max(spec)
+    spec_min = np.min(spec)
 
-  return (spec-spec_min)/(spec_max - spec_min), (spec_max, spec_min)
+    return (spec-spec_min)/(spec_max - spec_min), (spec_max, spec_min)
 
 def linear_scaler(spec):
-  """
-  linear scaler over spectrogram
-  min value -> -1 and max value -> 1
-  """
-  spec_max = np.max(spec)
-  spec_min = np.min(spec)
-  m = 2/(spec_max-spec_min)
-  n = (spec_max + spec_min)/(spec_min-spec_max)
+    """
+    linear scaler over spectrogram
+    min value -> -1 and max value -> 1
+    """
+    spec_max = np.max(spec)
+    spec_min = np.min(spec)
+    m = 2/(spec_max-spec_min)
+    n = (spec_max + spec_min)/(spec_min-spec_max)
 
-  return m*spec + n, (m, n)
+    return m*spec + n, (m, n)
 
 def split_specgram(example, clean_example, frames = 11):
-  """
-  Split specgram in groups of frames, the purpose is prepare data for the LSTM model input
+    """
+    Split specgram in groups of frames, the purpose is prepare data for the LSTM model input
 
-  example: reverberant spectrogram
-  clean_example: clean or target spectrogram
+    example: reverberant spectrogram
+    clean_example: clean or target spectrogram
 
-  return data input to the LSTM model and targets
-  """
-  clean_spec = clean_example[0, :, :]
-  rev_spec = example[0, :, :]
+    return data input to the LSTM model and targets
+    """
+    clean_spec = clean_example[0, :, :]
+    rev_spec = example[0, :, :]
 
-  n, m = clean_spec.shape
+    n, m = clean_spec.shape
 
-  targets = torch.zeros((m-frames+1, n))
-  data = torch.zeros((m-frames+1, n*frames))
+    targets = torch.zeros((m-frames+1, n))
+    data = torch.zeros((m-frames+1, n*frames))
   
-  idx_target = frames//2
-  for i in range(m-frames+1):
-    try:
-      targets[i, :] = clean_spec[:, idx_target]
-      data[i, :] = torch.reshape(rev_spec[:, i:i+frames], (1, -1))[0, :]
-      idx_target += 1
-    except (IndexError):
-      pass
-  return data, targets
+    idx_target = frames//2
+    for i in range(m-frames+1):
+    	try:
+    		targets[i, :] = clean_spec[:, idx_target]
+    		data[i, :] = torch.reshape(rev_spec[:, i:i+frames], (1, -1))[0, :]
+    		idx_target += 1
+    	except (IndexError):
+    		pass
+    return data, targets
 
 def split_realdata(example, frames = 11):
+    
+    """
+    Split 1 specgram in groups of frames, the purpose is prepare data for the LSTM and MLP model input
 
-  """
-  Split 1 specgram in groups of frames, the purpose is prepare data for the LSTM and MLP model input
+    example: reverberant ''real'' (not simulated) spectrogram
 
-  example: reverberant ''real'' (not simulated) spectrogram
-
-  return data input to the LSTM or MLP model 
-  """
+    return data input to the LSTM or MLP model 
+    """
   
-  rev_spec = example[0, :, :]
-  n, m = rev_spec.shape
-  data = torch.zeros((m-frames+1, n*frames))
-  for i in range(m-frames+1):
-    data[i, :] = torch.reshape(rev_spec[:, i:i+frames], (1, -1))[0, :]
-  return data
+    rev_spec = example[0, :, :]
+    n, m = rev_spec.shape
+    data = torch.zeros((m-frames+1, n*frames))
+    for i in range(m-frames+1):
+    	data[i, :] = torch.reshape(rev_spec[:, i:i+frames], (1, -1))[0, :]
+    return data
 
 def prepare_data(X, y, display = False):
-  """
-  Use split_specgram to split all specgrams
-  X: tensor containing reverberant spectrograms
-  y: tensor containing target spectrograms
-  """
 
-  data0, target0 = split_specgram(X[0, :, :, :], y[0, :, :, :])
+    """
+    Use split_specgram to split all specgrams
+    X: tensor containing reverberant spectrograms
+    y: tensor containing target spectrograms
+    """
 
-  total_data = data0.cuda()
-  targets = target0.cuda()
+    data0, target0 = split_specgram(X[0, :, :, :], y[0, :, :, :])
+
+    total_data = data0.cuda()
+    targets = target0.cuda()
   
-  for i in range(1, X.shape[0]):
-    
-    if display: 
-      print("Specgram n°" + str(i)) 
-      
-    data_i, target_i = split_specgram(X[i, :, :, :], y[i, :, :, :])
-    
-    total_data = torch.cat((total_data, data_i.cuda()), 0)
-    targets = torch.cat((targets, target_i.cuda()), 0)
+    for i in range(1, X.shape[0]):
+   	    if display: 
+   	    	print("Specgram n°" + str(i)) 
 
-  return  total_data, targets
+   	    data_i, target_i = split_specgram(X[i, :, :, :], y[i, :, :, :])
+   	    total_data = torch.cat((total_data, data_i.cuda()), 0)
+   	    targets = torch.cat((targets, target_i.cuda()), 0)
+
+    return  total_data, targets
+
+
+def split_for_supression(rev_tensor, target_tensor):
+    """
+    Given reverberant and target tensor with shape (#examples, 1, 128, 340)
+    return tensors with the same information, but with shape (#examples*340, 128)
+    """
+    rev_transform = torch.tensor([])
+    target_transform = torch.tensor([])
+
+    for example in range(rev_tensor.shape[0]):
+    	rev_transform = torch.cat((rev_transform, rev_tensor[example, 0, :, :].T))
+    
+    if (target_tensor!=None):
+    	for example in range(target_tensor.shape[0]):
+    		target_transform = torch.cat((target_transform, target_tensor[example, 0, :, :].T))
+  
+    return rev_transform, target_transform
+
+def normalize_per_frame(spec_transpose):
+    """
+    Normalize over spectrogram rows
+    """
+    means = []
+    stds = []
+    norm_spec = torch.zeros(spec_transpose.shape)
+
+    for spec_row in range(norm_spec.shape[0]):
+    	current_mean = spec_transpose[spec_row, :].mean()
+    	current_std = spec_transpose[spec_row, :].std()
+    	means.append(current_mean)
+    	stds.append(current_std)
+    	norm_spec[spec_row, :] = (spec_transpose[spec_row, :]- current_mean)/(current_std+1e-6) 
+  
+    return norm_spec, (means, stds)
+
+def denormalize_per_frame(norm_spec_transpose, means, stds):
+    """
+    denormalize row by row using means and stds given by normalize_per_frame
+    """
+    denorm_spec = torch.zeros(norm_spec_transpose.shape)
+
+    for spec_row in range(norm_spec_transpose.shape[0]):
+    	denorm_spec[spec_row, :] = (norm_spec_transpose[spec_row, :])*(stds[spec_row] + 1e-6) + means[spec_row]
+    
+    return denorm_spec.T
 
 
 #################################

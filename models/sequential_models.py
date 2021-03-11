@@ -56,3 +56,21 @@ class LSTMDNN(nn.Module):
         x, _ = self.lstm2(x)
         x = self.linear(x[:, 0, :])
         return x
+
+class SupLSTM(nn.Module):
+    """
+    Late supression dereverberation using LSTM
+    """
+
+    def __init__(self):
+        super(SupLSTM, self).__init__()
+        self.lstm1 = nn.LSTM(128, 512)
+        self.lstm2 = nn.LSTM(512, 512)
+        self.linear = nn.Linear(512, 128)
+
+    def forward(self, input):
+        x, _ = self.lstm1(input.view(input.shape[0], 1, input.shape[1]))
+        x, _ = self.lstm2(x)
+        x = self.linear(x[:, 0, :])
+        output = input - x
+        return output
