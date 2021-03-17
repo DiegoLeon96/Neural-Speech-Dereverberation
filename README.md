@@ -13,12 +13,12 @@ simulated data, for retransmitted data follow BUT Speech@FIT instructions
 
 ## Models
 
-- MLP 
-- LSTM based model 
-- FD-NDLP (WPE + frequency domain). 
+- MLP and LSTM with "Context Window"
+- Late Reverberation Supression LSTM [5] 
+- FD-NDLP (WPE + frequency domain) [6]. 
   Implementation taken from https://github.com/helianvine/fdndlp
-- U-net for speech dereverberation [6]. U-net architecture is based on image segmentation, available: https://github.com/milesial/Pytorch-UNet
-- GAN training with U-net generator [6]
+- U-net for speech dereverberation [7]. U-net architecture is based on image segmentation, available: https://github.com/milesial/Pytorch-UNet
+- GAN training with U-net generator [7]
 
 Download neural network weights here : https://drive.google.com/drive/folders/1wAls6GGppERIFUDEG12gk7zxNBU_iuff?usp=sharing 
 
@@ -46,6 +46,8 @@ Python implementation is taken from: https://github.com/schmiph2/pysepm
 
 [4] I. Szöke, M. Skácel, L. Mošner, J. Paliesek and J. Černocký, ''Building and evaluation of a real room impulse response dataset'', in IEEE Journal of Selected Topics in Signal Processing, vol. 13, no. 4, pp. 863-876, Aug. 2019, doi: 10.1109/JSTSP.2019.2917582.
 
-[5] T. Nakatani, T. Yoshioka, K. Kinoshita, M. Miyoshi and B. Juang, "Speech Dereverberation Based on Variance-Normalized Delayed Linear Prediction," in IEEE Transactions on Audio, Speech, and Language Processing, vol. 18, no. 7, pp. 1717-1731, Sept. 2010, doi: 10.1109/TASL.2010.2052251.
+[5] Yan Zhao, Deliang Wang, Buye Xu y Tao Zhang, ''Late Reverberation Supression using Recurrent Neural Networks with Long Short-Term Memory''. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2018.
 
-[6] Ori Ernst, Shlomo E. Chazan, Sharon Gannot and Jacob Goldberger, "Speech Dereverberation Using Fully Convolutional Networks". Faculty of Engineering, Bar-Ilan University, 3 Apr, 2019.
+[6] T. Nakatani, T. Yoshioka, K. Kinoshita, M. Miyoshi and B. Juang, "Speech Dereverberation Based on Variance-Normalized Delayed Linear Prediction," in IEEE Transactions on Audio, Speech, and Language Processing, vol. 18, no. 7, pp. 1717-1731, Sept. 2010, doi: 10.1109/TASL.2010.2052251.
+
+[7] Ori Ernst, Shlomo E. Chazan, Sharon Gannot and Jacob Goldberger, "Speech Dereverberation Using Fully Convolutional Networks". Faculty of Engineering, Bar-Ilan University, 3 Apr, 2019.
