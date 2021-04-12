@@ -18,6 +18,7 @@ simulated data, for retransmitted data follow BUT Speech@FIT instructions
 - FD-NDLP (WPE + frequency domain) [6]. 
   Implementation taken from https://github.com/helianvine/fdndlp
 - U-net for speech dereverberation [7]. U-net architecture is based on image segmentation, available: https://github.com/milesial/Pytorch-UNet
+- Late Reverberation Supression U-net (proposed method, based on [5, 7] ideas)
 - GAN training with U-net generator [7]
 
 Download neural network weights here : https://drive.google.com/drive/folders/1wAls6GGppERIFUDEG12gk7zxNBU_iuff?usp=sharing 
