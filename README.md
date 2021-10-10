@@ -37,6 +37,10 @@ Speech Enhancement Example with U-net generator:
 
 Python implementation is taken from: https://github.com/schmiph2/pysepm
 
+## Citing
+If you use code or any ideas from here, please cite our
+[publication at arXiv](https://arxiv.org/abs/2110.02144)
+
 ## References
 
 [1] Vassil Panayotov, Guoguo Chen, Daniel Povey and Sanjeev Khudanpur, "LibriSpeech: an ASR corpus based on public domain audio books", ICASSP 2015.
